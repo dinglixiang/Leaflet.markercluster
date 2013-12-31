@@ -31,37 +31,191 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="leafletmarkercluster" class="anchor" href="#leafletmarkercluster"><span class="octicon octicon-link"></span></a>Leaflet.markercluster</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Provides Beautiful Animated Marker Clustering functionality for <a href="http://leafletjs.com">Leaflet</a>, a JS library for interactive maps.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p><em>Requires Leaflet 0.7.0 or newer.</em></p>
+
+<p>For a Leaflet 0.5 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/archive/b128e950d8f5d7da5b60bd0aa9a88f6d3dd17c98.zip">Download b128e950</a><br>
+For a Leaflet 0.4 compatible version, <a href="https://github.com/Leaflet/Leaflet.markercluster/archive/0.2.zip">Download the 0.2 release</a></p>
+
+<h2>
+<a name="using-the-plugin" class="anchor" href="#using-the-plugin"><span class="octicon octicon-link"></span></a>Using the plugin</h2>
+
+<p>See the included examples for usage.</p>
+
+<p>The <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.388.html">realworld example</a> is a good place to start, it uses all of the defaults of the clusterer.
+Or check out the <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a> for how to customise the behaviour and appearance of the clusterer</p>
+
+<h3>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
+
+<p>Create a new MarkerClusterGroup, add your markers to it, then add it to the map</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">markers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">MarkerClusterGroup</span><span class="p">();</span>
+<span class="nx">markers</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">Marker</span><span class="p">(</span><span class="nx">getRandomLatLng</span><span class="p">(</span><span class="nx">map</span><span class="p">)));</span>
+<span class="p">...</span> <span class="nx">Add</span> <span class="nx">more</span> <span class="nx">layers</span> <span class="p">...</span>
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">markers</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="defaults" class="anchor" href="#defaults"><span class="octicon octicon-link"></span></a>Defaults</h3>
+
+<p>By default the Clusterer enables some nice defaults for you:</p>
+
+<ul>
+<li>
+<strong>showCoverageOnHover</strong>: When you mouse over a cluster it shows the bounds of its markers.</li>
+<li>
+<strong>zoomToBoundsOnClick</strong>: When you click a cluster we zoom to its bounds.</li>
+<li>
+<strong>spiderfyOnMaxZoom</strong>: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers.</li>
+<li>
+<strong>removeOutsideVisibleBounds</strong>: Clusters and markers too far from the viewport are removed from the map for performance.</li>
+</ul><p>You can disable any of these as you want in the options when you create the MarkerClusterGroup:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">markers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">MarkerClusterGroup</span><span class="p">({</span> <span class="nx">spiderfyOnMaxZoom</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">showCoverageOnHover</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">zoomToBoundsOnClick</span><span class="o">:</span> <span class="kc">false</span> <span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="customising-the-clustered-markers" class="anchor" href="#customising-the-clustered-markers"><span class="octicon octicon-link"></span></a>Customising the Clustered Markers</h3>
+
+<p>As an option to MarkerClusterGroup you can provide your own function for creating the Icon for the clustered markers.
+The default implementation changes color at bounds of 10 and 100, but more advanced uses may require customising this.
+You do not need to include the .Default css if you go this way.
+You are passed a MarkerCluster object, you'll probably want to use getChildCount() or getAllChildMarkers() to work out the icon to show</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">markers</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">MarkerClusterGroup</span><span class="p">({</span>
+    <span class="nx">iconCreateFunction</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cluster</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">DivIcon</span><span class="p">({</span> <span class="nx">html</span><span class="o">:</span> <span class="s1">'&lt;b&gt;'</span> <span class="o">+</span> <span class="nx">cluster</span><span class="p">.</span><span class="nx">getChildCount</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'&lt;/b&gt;'</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Check out the <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-custom.html">custom example</a> for an example of this.</p>
+
+<h3>
+<a name="all-options" class="anchor" href="#all-options"><span class="octicon octicon-link"></span></a>All Options</h3>
+
+<p>Enabled by default (boolean options):</p>
+
+<ul>
+<li>
+<strong>showCoverageOnHover</strong>: When you mouse over a cluster it shows the bounds of its markers.</li>
+<li>
+<strong>zoomToBoundsOnClick</strong>: When you click a cluster we zoom to its bounds.</li>
+<li>
+<strong>spiderfyOnMaxZoom</strong>: When you click a cluster at the bottom zoom level we spiderfy it so you can see all of its markers.</li>
+<li>
+<strong>removeOutsideVisibleBounds</strong>: Clusters and markers too far from the viewport are removed from the map for performance.</li>
+</ul><p>Other options</p>
+
+<ul>
+<li>
+<strong>animateAddingMarkers</strong>: If set to true then adding individual markers to the MarkerClusterGroup after it has been added to the map will add the marker and animate it in to the cluster. Defaults to false as this gives better performance when bulk adding markers. addLayers does not support this, only addLayer with individual Markers.</li>
+<li>
+<strong>disableClusteringAtZoom</strong>: If set, at this zoom level and below markers will not be clustered. This defaults to disabled. <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld-maxzoom.388.html">See Example</a>
+</li>
+<li>
+<strong>maxClusterRadius</strong>: The maximum radius that a cluster will cover from the central marker (in pixels). Default 80. Decreasing will make more smaller clusters.</li>
+<li>
+<strong>polygonOptions</strong>: Options to pass when creating the L.Polygon(points, options) to show the bounds of a cluster</li>
+<li>
+<strong>singleMarkerMode</strong>: If set to true, overrides the icon for all added markers to make them appear as a 1 size cluster</li>
+<li>
+<strong>spiderfyDistanceMultiplier</strong>: Increase from 1 to increase the distance away from the center that spiderfied markers are placed. Use if you are using big marker icons (Default:1)</li>
+<li>
+<strong>iconCreateFunction</strong>: Function used to create the cluster icon <a href="https://github.com/Leaflet/Leaflet.markercluster/blob/15ed12654acdc54a4521789c498e4603fe4bf781/src/MarkerClusterGroup.js#L542">See default as example</a>.</li>
+</ul><h2>
+<a name="events" class="anchor" href="#events"><span class="octicon octicon-link"></span></a>Events</h2>
+
+<p>If you register for click, mouseover, etc events just related to Markers in the cluster.
+To recieve events for clusters listen to 'cluster' + 'eventIWant', ex: 'clusterclick', 'clustermouseover'.</p>
+
+<p>Set your callback up as follows to handle both cases:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">markers</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'marker '</span> <span class="o">+</span> <span class="nx">a</span><span class="p">.</span><span class="nx">layer</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">markers</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'clusterclick'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'cluster '</span> <span class="o">+</span> <span class="nx">a</span><span class="p">.</span><span class="nx">layer</span><span class="p">.</span><span class="nx">getAllChildMarkers</span><span class="p">().</span><span class="nx">length</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h2>
+
+<h3>
+<a name="getting-the-bounds-of-a-cluster" class="anchor" href="#getting-the-bounds-of-a-cluster"><span class="octicon octicon-link"></span></a>Getting the bounds of a cluster</h3>
+
+<p>When you recieve an event from a cluster you can query it for the bounds.
+See <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-convexhull.html">example/marker-clustering-convexhull.html</a> for a working example.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">markers</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'clusterclick'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">Polygon</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">layer</span><span class="p">.</span><span class="nx">getConvexHull</span><span class="p">()));</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="zooming-to-the-bounds-of-a-cluster" class="anchor" href="#zooming-to-the-bounds-of-a-cluster"><span class="octicon octicon-link"></span></a>Zooming to the bounds of a cluster</h3>
+
+<p>When you recieve an event from a cluster you can zoom to its bounds in one easy step.
+If all of the markers will appear at a higher zoom level, that zoom level is zoomed to instead.
+See <a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-zoomtobounds.html">marker-clustering-zoomtobounds.html</a> for a working example.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">markers</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'clusterclick'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">a</span><span class="p">.</span><span class="nx">layer</span><span class="p">.</span><span class="nx">zoomToBounds</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="getting-the-visible-parent-of-a-marker" class="anchor" href="#getting-the-visible-parent-of-a-marker"><span class="octicon octicon-link"></span></a>Getting the visible parent of a marker</h3>
+
+<p>If you have a marker in your MarkerClusterGroup and you want to get the visible parent of it (Either itself or a cluster it is contained in that is currently visible on the map).
+This will return null if the marker and its parent clusters are not visible currently (they are not near the visible viewpoint)</p>
+
+<pre><code>var visibleOne = markerClusterGroup.getVisibleParent(myMarker);
+console.log(visibleOne.getLatLng());
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h3>
+<a name="adding-and-removing-markers" class="anchor" href="#adding-and-removing-markers"><span class="octicon octicon-link"></span></a>Adding and removing Markers</h3>
+
+<p>addLayer, removeLayer and clearLayers are supported and they should work for most uses.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="bulk-adding-and-removing-markers" class="anchor" href="#bulk-adding-and-removing-markers"><span class="octicon octicon-link"></span></a>Bulk adding and removing Markers</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>addLayers and removeLayers are bulk methods for adding and removing markers and should be favoured over the single versions when doing bulk addition/removal of markers. Each takes an array of markers</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>If you are removing a lot of markers it will almost definitely be better to call clearLayers then call addLayers to add the markers you don't want to remove back in. See <a href="https://github.com/Leaflet/Leaflet.markercluster/issues/59#issuecomment-9320628">#59</a> for details.</p>
 
 <h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a name="other-methods" class="anchor" href="#other-methods"><span class="octicon octicon-link"></span></a>Other Methods</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<pre><code>hasLayer(layer): Returns true if the given layer (marker) is in the MarkerClusterGroup
+zoomToShowLayer(layer, callback): Zooms to show the given marker (spidifying if required), calls the callback when the marker is visible on the map
+addLayers(layerArray): Adds the markers in the given array from the MarkerClusterGroup in an efficent bulk method.
+removeLayers(layerArray): Removes the markers in the given array from the MarkerClusterGroup in an efficent bulk method.
+</code></pre>
+
+<h2>
+<a name="handling-lots-of-markers" class="anchor" href="#handling-lots-of-markers"><span class="octicon octicon-link"></span></a>Handling LOTS of markers</h2>
+
+<p>The Clusterer can handle 10000 or even 50000 markers (in chrome). IE9 has some issues with 50000.
+<a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.10000.html">realworld 10000 example</a>
+<a href="http://leaflet.github.com/Leaflet.markercluster/example/marker-clustering-realworld.50000.html">realworld 50000 example</a>
+Performance optimizations could be done so these are handled more gracefully (Running the initial clustering over multiple JS calls rather than locking the browser for a long time)</p>
 
 <h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>Leaflet.markercluster is free software, and may be redistributed under the MIT-LICENSE.</p>
+
+<p><a href="https://travis-ci.org/Leaflet/Leaflet.markercluster"><img src="https://travis-ci.org/Leaflet/Leaflet.markercluster.png?branch=master" alt="Build Status"></a></p>
       </section>
     </div>
 

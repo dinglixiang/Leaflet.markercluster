@@ -17,7 +17,7 @@
 			height: 20px;
 			background-color: red;
 			text-align: center;
-			font-size: 24px;
+			font-size: 14px;
 		}
 
 	</style>
@@ -38,7 +38,7 @@
 
 		//Custom radius and icon create function
 		var markers = L.markerClusterGroup({
-			maxClusterRadius: 120,
+			maxClusterRadius: 50,
 			iconCreateFunction: function (cluster) {
 				var markers = cluster.getAllChildMarkers();
 				var n = 0;
